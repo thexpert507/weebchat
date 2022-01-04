@@ -51,6 +51,6 @@
 	.bg-chat::before {
 		content: '';
 		@apply opacity-40 w-full h-full absolute top-0 bg-contain bg-[#dddbd1];
-		background-image: url(background.png);
+		background-image: url('./background.png');
 	}
 </style>
