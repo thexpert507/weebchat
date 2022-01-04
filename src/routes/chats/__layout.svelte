@@ -26,6 +26,7 @@
 	import Aside from './_components/aside.svelte';
 	import Nav from './_components/nav.svelte';
 	import { fade } from 'svelte/transition';
+	import { env } from '$lib/env';
 
 	onMount(users.registerConnection);
 	onDestroy(users.deleteConnection);
@@ -34,7 +35,7 @@
 <section class="grid grid-cols-12 auto-rows-fr h-full lg:rounded-md overflow-hidden " in:fade>
 	<Aside />
 	<div
-		class="ml-[4rem] lg:ml-0 col-span-12 lg:col-span-8 h-full border-l border-gray-300 bg-chat relative"
+		class="ml-[4rem] lg:ml-0 col-span-12 lg:col-span-8 h-full border-l border-gray-300 bg-chat relative before:content-[''] before:opacity-40 before:w-full before:h-full before:absolute before:top-0 before:bg-contain before:bg-[#dddbd1]"
 	>
 		<div class="absolute top-0 w-full">
 			<Nav>
@@ -47,10 +48,16 @@
 	</div>
 </section>
 
-<style lang="postcss">
-	.bg-chat::before {
-		content: '';
-		@apply opacity-40 w-full h-full absolute top-0 bg-contain bg-[#dddbd1];
-		background-image: url('./background.png');
-	}
-</style>
+{#if env.production}
+	<style lang="postcss">
+		.bg-chat::before {
+			background-image: url('https://weebchat.vercel.app/background.png');
+		}
+	</style>
+{:else}
+	<style lang="postcss">
+		.bg-chat::before {
+			background-image: url(background.png);
+		}
+	</style>
+{/if}
