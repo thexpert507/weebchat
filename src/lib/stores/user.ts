@@ -1,41 +1,46 @@
-import { browser } from '$app/env';
-import { supabase } from '$lib/supabase';
+import { fireapp } from '$lib/firebase';
+import {
+	collection,
+	onSnapshot,
+	addDoc,
+	deleteDoc,
+	CollectionReference,
+	getDocs
+} from 'firebase/firestore';
+import type { DocumentData } from 'firebase/firestore';
 import type { User } from 'src/interfaces/user';
 import { writable } from 'svelte/store';
 import { profile } from './profile';
+import { browser } from '$app/env';
 
 const { subscribe, set } = writable([] as User[]);
 let closeProfile;
 let profileConnected: User;
-
-function getConnections() {
-	supabase
-		.from('connections')
-		.select('*')
-		.then(({ data }) => set(data));
-}
-
+let connectionsReference: CollectionReference<DocumentData>;
 if (browser) {
-	getConnections();
-	supabase
-		.from('connections')
-		.on('*', (payload) => {
-			getConnections();
-		})
-		.subscribe();
+	connectionsReference = collection(fireapp, 'connections');
+	onSnapshot(connectionsReference, (data) => {
+		const users = data.docs.map((v) => v.data()) as User[];
+		set(users);
+	});
 }
+
 export const users = {
 	subscribe,
-	registerConnection: () => {
-		closeProfile = profile.subscribe(async ({ user }) => {
-			profileConnected = user;
-			await supabase.from('connections').insert(user);
-			console.log('Register new connection');
-		});
+	registerConnection: (): void => {
+		closeProfile =
+			browser &&
+			profile.subscribe(async ({ user }) => {
+				profileConnected = user;
+				await addDoc(connectionsReference, user);
+			});
 	},
-	deleteConnection: async () => {
-		closeProfile();
-		await supabase.from('connections').delete().eq('id', profileConnected.id);
-		console.log('Deleted connection');
+	deleteConnection: async (): Promise<void> => {
+		closeProfile && closeProfile();
+		const connections = await getDocs(connectionsReference);
+		browser &&
+			connections.docs
+				.filter((c) => c.data().id === profileConnected.id)
+				.map((c) => deleteDoc(c.ref));
 	}
 };

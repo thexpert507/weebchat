@@ -13,6 +13,10 @@
 	$: register = $profile.isAvailable && $profile.err === 'EMPTY' && $loading === 100;
 
 	const handleSubmit = () => profile.setProfile(nickname);
+	const handleLogin = () => {
+		profile.login();
+		goto('/chats');
+	};
 </script>
 
 <header class="w-full h-28 flex items-center justify-center">
@@ -42,16 +46,16 @@
 		</form>
 	</div>
 {:else}
-	<div class="w-full flex items-center justify-center" transition:fade>
+	<div class="w-full flex items-center justify-center" in:fade>
 		<div class="w-1/6 h-5 rounded-3xl bg-slate-300 flex items-center justify-start">
 			<div class="rounded-3xl bg-[#1c8b82] h-4 mx-0.5" style="width: {$loading}%;" />
 		</div>
 	</div>
 {/if}
 {#if !register && $loading === 100}
-	<div class="my-10 w-full flex items-center justify-center" transition:fade>
+	<div class="my-10 w-full flex items-center justify-center" in:fade>
 		<div
-			on:click={() => goto('/chats')}
+			on:click={handleLogin}
 			class="my-5 cursor-pointer transition-all duration-300 rounded hover:shadow-md hover:shadow-weegreen/30 border border-weegreen text-weegreen px-4 py-2 font-light"
 		>
 			{$profile.user.nickname}
