@@ -16,7 +16,7 @@
 <svelte:window bind:innerWidth={width} />
 <aside
 	class:closed={classOpen}
-	class="navMobile absolute w-full sm:w-1/2 md:w-1/3 lg:w-full lg:col-span-4 lg:block lg:relative"
+	class="navMobile hidden absolute w-full sm:w-1/2 md:w-1/3 lg:w-full lg:col-span-4 sm:block lg:relative"
 >
 	<Nav>
 		<div class="flex items-center justify-between h-full w-full">

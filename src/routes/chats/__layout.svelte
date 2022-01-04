@@ -27,15 +27,17 @@
 	import Nav from './_components/nav.svelte';
 	import { fade } from 'svelte/transition';
 	import { env } from '$lib/env';
+	import ScrollerUsers from './_components/scrollerUsers.svelte';
 
 	onMount(users.registerConnection);
 	onDestroy(users.deleteConnection);
 </script>
 
 <section class="grid grid-cols-12 auto-rows-fr h-full lg:rounded-md overflow-hidden " in:fade>
+	<ScrollerUsers />
 	<Aside />
 	<div
-		class="ml-[4rem] lg:ml-0 col-span-12 lg:col-span-8 h-full border-l border-gray-300 bg-chat relative before:content-[''] before:opacity-40 before:w-full before:h-full before:absolute before:top-0 before:bg-contain before:bg-[#dddbd1]"
+		class="ml-0 sm:ml-16 lg:ml-0 col-span-12 lg:col-span-8 h-full border-l border-gray-300 bg-chat relative before:content-[''] before:opacity-40 before:w-full before:h-full before:absolute before:top-0 before:bg-contain before:bg-[#dddbd1]"
 	>
 		<div class="absolute top-0 w-full">
 			<Nav>

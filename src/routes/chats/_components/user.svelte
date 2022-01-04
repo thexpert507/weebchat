@@ -7,7 +7,7 @@
 </script>
 
 <div
-	class="shrink-0 flex items-center px-1 py-2 cursor-pointer hover:bg-gray-300"
+	class="shrink-0 w-full flex items-center px-1 py-2 cursor-pointer hover:bg-gray-300"
 	on:click={() => goto(`/chats/${user.nickname}`)}
 >
 	{#if !user.image}

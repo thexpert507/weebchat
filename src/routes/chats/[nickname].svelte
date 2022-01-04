@@ -7,6 +7,7 @@
 	import Chat from './_components/chat.svelte';
 	import Nav from './_components/nav.svelte';
 	import { flip } from 'svelte/animate';
+	import { floatingMenu } from '$lib/stores/floatingMenu';
 
 	let message: string;
 	$: nickname = $page.params?.nickname;
@@ -43,6 +44,12 @@
 <div class="w-full absolute bottom-0">
 	<Nav>
 		<div class="flex items-center justify-around h-full">
+			<div
+				on:click={() => floatingMenu.toogle()}
+				class="sm:hidden text-3xl mx-3 text-gray-800 shrink-0 cursor-pointer"
+			>
+				<Icon icon="ph:chats-bold" />
+			</div>
 			<div class="text-3xl mx-3 text-gray-800 shrink-0 cursor-pointer">
 				<Icon icon="carbon:face-activated" />
 			</div>
