@@ -20,23 +20,13 @@
 >
 	<Nav>
 		<div class="flex items-center justify-between h-full w-full">
-			<div class="px-1 flex items-center h-full shrink-0">
+			<div class="px-1 flex items-center h-full shrink-0 cursor-pointer">
 				<div
 					on:click={() => (closed = !closed)}
 					class="text-3xl flex items-center justify-center w-10 h-10 rounded-full shadow bg-white mx-2"
 				>
 					<Icon icon="mdi:account" />
 				</div>
-				<span class="ml-2 font-light text-2xl">{$profile.user.nickname}</span>
-			</div>
-			<div class="hidden text-3xl lg:flex items-center justify-center w-10 h-10">
-				<Icon icon="carbon:overflow-menu-vertical" />
-			</div>
-			<div
-				on:click={() => (closed = !closed)}
-				class="text-3xl flex lg:hidden items-center justify-center w-10 h-10"
-			>
-				<Icon icon="codicon:chrome-close" />
 			</div>
 		</div>
 	</Nav>

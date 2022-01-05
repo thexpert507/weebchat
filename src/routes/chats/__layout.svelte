@@ -24,7 +24,7 @@
 	<div
 		class="ml-0 sm:ml-16 lg:ml-0 col-span-12 lg:col-span-8 h-full border-l border-gray-300 bg-chat relative before:content-[''] before:opacity-40 before:w-full before:h-full before:absolute before:top-0 before:bg-contain before:bg-[#dddbd1]"
 	>
-		<div class="absolute top-0 w-full">
+		<div class="absolute top-0 w-full z-50">
 			<Nav>
 				<div class="px-2 flex items-center h-full w-full">
 					{#if !nickname}
