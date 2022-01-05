@@ -1,36 +1,21 @@
-<script context="module" lang="ts">
-	import { profile } from '$lib/stores/profile';
-	import type { Load, LoadInput } from '@sveltejs/kit';
-	import type { Profile } from 'src/interfaces/profile';
-
-	function getProfile(): Promise<Profile> {
-		return new Promise((resolve, reject) => {
-			profile.subscribe((prof) => resolve(prof));
-		});
-	}
-
-	export const load: Load = async ({}: LoadInput) => {
-		const prof = await getProfile();
-		if (!prof.isAuth) {
-			return { redirect: '/', status: 302 };
-		}
-		return { props: {} };
-	};
-</script>
-
 <script lang="ts">
-	import { users } from '$lib/stores/user';
-
 	import { onDestroy, onMount } from 'svelte';
-
-	import Aside from './_components/aside.svelte';
-	import Nav from './_components/nav.svelte';
-	import { fade } from 'svelte/transition';
+	import { users } from '$lib/stores/user';
 	import { env } from '$lib/env';
+	import { page } from '$app/stores';
+	import { fade, fly } from 'svelte/transition';
+	import Nav from './_components/nav.svelte';
+	import Aside from './_components/aside.svelte';
 	import ScrollerUsers from './_components/scrollerUsers.svelte';
+	import Icon from '@iconify/svelte';
+	import { goto } from '$app/navigation';
+
+	$: nickname = $page.params.nickname;
 
 	onMount(users.registerConnection);
 	onDestroy(users.deleteConnection);
+
+	$: isHome = !$page.url.pathname.includes('config');
 </script>
 
 <section class="grid grid-cols-12 auto-rows-fr h-full lg:rounded-md overflow-hidden " in:fade>
@@ -41,8 +26,33 @@
 	>
 		<div class="absolute top-0 w-full">
 			<Nav>
-				<div class=" px-2 flex items-center h-full">
-					<h1 class="font-semibold text-2xl tracking-wider text-weegreen-dark">Weebchat</h1>
+				<div class="px-2 flex items-center h-full w-full">
+					{#if !nickname}
+						<h1 in:fade class=" w-full font-semibold text-2xl tracking-wider text-weegreen-dark">
+							Weebchat
+						</h1>
+					{:else}
+						<h1 in:fade class=" w-full font-semibold text-2xl tracking-wider text-weegreen-dark">
+							{nickname}
+						</h1>
+					{/if}
+					{#if isHome}
+						<div
+							transition:fly={{ x: -10 }}
+							on:click={() => goto('/chats/config')}
+							class="text-2xl mx-2 hover:scale-110"
+						>
+							<Icon icon="vscode-icons:file-type-light-config" />
+						</div>
+					{:else}
+						<div
+							transition:fly={{ x: -10 }}
+							on:click={() => goto('/chats')}
+							class="text-gray-800 text-2xl mx-2 hover:scale-110"
+						>
+							<Icon icon="bx:bxs-home" />
+						</div>
+					{/if}
 				</div>
 			</Nav>
 		</div>

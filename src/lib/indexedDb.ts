@@ -1,7 +1,17 @@
 import { browser } from '$app/env';
 import { writable } from 'svelte/store';
 
-const { set, subscribe } = writable({ isAvailable: false, db: null as IDBDatabase });
+interface DB {
+	isAvailable: boolean;
+	db: IDBDatabase;
+	isDeleting?: boolean;
+}
+
+const { set, subscribe, update } = writable<DB>({
+	isAvailable: false,
+	db: null as IDBDatabase,
+	isDeleting: false
+});
 
 if (browser) {
 	const indexedDB = window.indexedDB.open('weebchat', 3.0);
@@ -33,4 +43,12 @@ if (browser) {
 	};
 }
 
-export const idb = { subscribe };
+export const idb = {
+	subscribe,
+	deleteDB: async (): Promise<void> => {
+		update((value) => ({ ...value, isDeleting: true }));
+		const databases = await window.indexedDB.databases();
+		databases.map((d) => window.indexedDB.deleteDatabase(d.name));
+		update((value) => ({ ...value, isDeleting: false }));
+	}
+};

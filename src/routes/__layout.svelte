@@ -1,3 +1,24 @@
+<script lang="ts" context="module">
+	import { profile } from '$lib/stores/profile';
+
+	import type { Load, LoadInput } from '@sveltejs/kit';
+	import type { Profile } from 'src/interfaces/profile';
+
+	function getProfile(): Promise<Profile> {
+		return new Promise((resolve, reject) => {
+			profile.subscribe((prof) => resolve(prof));
+		});
+	}
+
+	export const load: Load = async ({ url }: LoadInput) => {
+		const prof = await getProfile();
+		if (!prof.isAuth && url.pathname.includes('chats')) {
+			return { redirect: '/', status: 302 };
+		}
+		return { props: {} };
+	};
+</script>
+
 <script lang="ts">
 	import '../app.css';
 </script>

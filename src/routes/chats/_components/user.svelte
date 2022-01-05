@@ -4,10 +4,13 @@
 	import { goto } from '$app/navigation';
 
 	export let user: User;
+	export let cube = false;
 </script>
 
 <div
-	class="shrink-0 w-full flex items-center px-1 py-2 cursor-pointer hover:bg-gray-300"
+	class:flex-col={cube}
+	class:w-16={cube}
+	class="shrink-0 w-full flex items-center px-1 py-2 cursor-pointer hover:bg-gray-300 relative overflow-hidden"
 	on:click={() => goto(`/chats/${user.nickname}`)}
 >
 	{#if !user.image}
@@ -17,5 +20,7 @@
 			<Icon icon="mdi:account" />
 		</div>
 	{/if}
-	<div class="font-light ml-2">{user.nickname}</div>
+	{#if !cube}
+		<div class=" ml-2 text-lg font-light tracking-wider text-gray-900">{user.nickname}</div>
+	{/if}
 </div>

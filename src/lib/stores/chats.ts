@@ -62,7 +62,7 @@ export const chats = {
 	},
 	add: (chat: Chat): void => {
 		transaction().add(chat);
-		addDoc(chatsReference, chat);
+		if (browser) addDoc(chatsReference, chat);
 		update((data) => [...data, chat]);
 	}
 };
