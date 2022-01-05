@@ -8,8 +8,13 @@
 	import Nav from './_components/nav.svelte';
 	import { flip } from 'svelte/animate';
 	import { floatingMenu } from '$lib/stores/floatingMenu';
+	import { fly } from 'svelte/transition';
+	import { emojis } from '$lib/emojis';
+	import Emoji from './_components/emoji.svelte';
 
-	let message: string;
+	let message: string = '';
+	let margin = '4rem';
+	$: openEmojis = false;
 	$: nickname = $page.params?.nickname;
 	$: chats.get($page.params?.nickname);
 	$: ordered = $chats.sort((a, b) => {
@@ -18,6 +23,7 @@
 		return dateB - dateA;
 	});
 	const send = () => {
+		if (!message) return;
 		chats.add({
 			id: v4(),
 			from: $profile.user.nickname,
@@ -32,25 +38,51 @@
 	const enter = (ev: KeyboardEvent) => {
 		if (ev.code === 'Enter') send();
 	};
+
+	const openTabEmojis = () => {
+		if ($floatingMenu) floatingMenu.close();
+		margin = margin === '11rem' ? '4rem' : '11rem';
+		openEmojis = !openEmojis;
+	};
+	const openFloatingMenu = () => {
+		if (openEmojis) margin = margin === '11rem' ? '4rem' : '11rem';
+		if (openEmojis) openEmojis = false;
+		floatingMenu.toogle();
+	};
+
+	const handleClickEmoji = (emoji: string) => () => (message += emoji);
 </script>
 
-<div class="absolute top-0 w-full flex flex-col-reverse h-[calc(100%_-_4rem)] px-2 md:px-10">
-	{#each ordered as chat, index (chat.id)}
+<div
+	style="--margin: {margin}"
+	class="absolute transition-all duration-300 overflow-y-scroll top-0 w-full flex flex-col-reverse h-[calc(100%_-_var(--margin))] px-2 pt-16 md:px-10"
+>
+	{#each ordered as chat (chat.id)}
 		<div animate:flip={{ duration: 300 }}>
 			<Chat {chat} />
 		</div>
 	{/each}
 </div>
+{#if openEmojis}
+	<div
+		transition:fly={{ y: 20 }}
+		class="absolute bottom-0 mb-16 z-50 w-full h-28 bg-[#ededed] border-b border-gray-200 flex items-start flex-wrap overflow-y-scroll"
+	>
+		{#each emojis as emoji, i (i)}
+			<Emoji {emoji} on:click={handleClickEmoji(emoji.code)} />
+		{/each}
+	</div>
+{/if}
 <div class="w-full absolute bottom-0">
 	<Nav>
 		<div class="flex items-center justify-around h-full">
 			<div
-				on:click={() => floatingMenu.toogle()}
+				on:click={openFloatingMenu}
 				class="sm:hidden text-3xl mx-3 text-gray-800 shrink-0 cursor-pointer"
 			>
 				<Icon icon="ph:chats-bold" />
 			</div>
-			<div class="text-3xl mx-3 text-gray-800 shrink-0 cursor-pointer">
+			<div on:click={openTabEmojis} class="text-3xl mx-3 text-gray-800 shrink-0 cursor-pointer">
 				<Icon icon="carbon:face-activated" />
 			</div>
 			<div class="w-full px-2 py-1 bg-white rounded-3xl border border-gray-200">
