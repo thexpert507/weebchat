@@ -55,7 +55,7 @@
 
 <div
 	style="--margin: {margin}"
-	class="absolute transition-all duration-300 overflow-y-scroll top-0 w-full flex flex-col-reverse h-[calc(100%_-_var(--margin))] px-2 pt-16 md:px-10"
+	class="absolute transition-all duration-300 overflow-y-scroll top-0 w-full flex flex-col-reverse h-[calc(100%_-_var(--margin))] px-2 pt-16 pb-5 md:px-10"
 >
 	{#each ordered as chat (chat.id)}
 		<div animate:flip={{ duration: 300 }}>
@@ -66,7 +66,7 @@
 {#if openEmojis}
 	<div
 		transition:fly={{ y: 20 }}
-		class="absolute bottom-0 mb-16 z-50 w-full h-28 bg-[#ededed] border-b border-gray-200 flex items-start flex-wrap overflow-y-scroll"
+		class="absolute bottom-0 mb-16 z-10 w-full h-28 bg-[#ededed] border-b border-gray-200 overflow-y-scroll grid grid-cols-10 md:grid-cols-12 place-content-evenly"
 	>
 		{#each emojis as emoji, i (i)}
 			<Emoji {emoji} on:click={handleClickEmoji(emoji.code)} />
